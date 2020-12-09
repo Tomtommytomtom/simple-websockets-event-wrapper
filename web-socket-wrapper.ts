@@ -6,7 +6,7 @@ export class WebSocketWrapper{
         this.callbacks = {};
         ws.onmessage = (payload: any) => {
             const parsedPayload = JSON.parse(payload.data)
-            console.log("succesfully parsed JSON, calling:",payload.eventName, "with parameter:",payload.data)
+            console.log("succesfully parsed JSON, calling:",parsedPayload.eventName, "with parameter:",parsedPayload.data)
             if(this.callbacks[parsedPayload.eventName]){
                 this.callbacks[parsedPayload.eventName](parsedPayload.data)
             }
