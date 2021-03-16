@@ -1,6 +1,11 @@
+export interface Event<T> {
+    eventName: string
+    data: T
+}
+
 export class WebSocketWrapper{
     public ws: WebSocket
-    callbacks: any
+    callbacks: { [key: string]: (data: any) => void }
     constructor(ws: WebSocket){
         this.ws = ws;
         this.callbacks = {};
@@ -15,14 +20,14 @@ export class WebSocketWrapper{
         }
     }
 
-    public on(eventName: string, callback: any){
+    public on<T>(eventName: string, callback: (data: T) => void){
         this.callbacks[eventName] = callback
     }
 
-    public send(eventName: string, data: any){
+    public send<T>(eventName: string, data: T){
         const payload = {
-            eventName: eventName,
-            data: data
+            eventName,
+            data
         }
         this.ws.send(JSON.stringify(payload))
     }
