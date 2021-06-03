@@ -3,24 +3,23 @@ export interface Event<T> {
     data: T
 }
 
+export type EventHandler<T> = (data: T) => void
+
 export class WebSocketWrapper{
     public ws: WebSocket
-    callbacks: { [key: string]: (data: any) => void }
+    callbacks: { [eventName: string]: EventHandler<any> }
     constructor(ws: WebSocket){
         this.ws = ws;
         this.callbacks = {};
         ws.onmessage = (payload: any) => {
-            console.log('raw json:',payload)
-            const parsedPayload = JSON.parse(payload.data)
-            console.log("succesfully parsed JSON, calling:",parsedPayload.eventName, "with parameter:",parsedPayload.data)
-            if(this.callbacks[parsedPayload.eventName]){
-                console.log("function with key:",parsedPayload.eventName,"actually exists. All callbacks:",this.callbacks)
-                this.callbacks[parsedPayload.eventName](parsedPayload.data)
+            const parsed = JSON.parse(payload.data)
+            if(this.callbacks[parsed.eventName]){
+                this.callbacks[parsed.eventName](parsed.data)
             }
         }
     }
 
-    public on<T>(eventName: string, callback: (data: T) => void){
+    public on<T>(eventName: string, callback: EventHandler<T>){
         this.callbacks[eventName] = callback
     }
 

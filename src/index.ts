@@ -1,1 +1,1 @@
-export { WebSocketWrapper, Event } from "./web-socket-wrapper"
+export { WebSocketWrapper, Event, EventHandler } from "./web-socket-wrapper"
